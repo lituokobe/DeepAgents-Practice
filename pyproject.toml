@@ -1,0 +1,14 @@
+[project]
+name = "37-deepagents-practice"
+version = "0.1.0"
+description = "Add your description here"
+requires-python = ">=3.13"
+dependencies = [
+    "deepagents>=0.5.7",
+    "dotenv>=0.9.9",
+    "langchain>=1.2.17",
+    "langchain-openai>=1.2.1",
+    "langgraph-checkpoint-redis>=0.4.1",
+    "langgraph-cli[inmem]>=0.4.24", # langgraph's local server service, for quick testing of code
+    "zai-sdk>=0.2.2",
+]

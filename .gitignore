@@ -1,0 +1,7 @@
+class_content
+.DS_ Store
+.idea
+.vscode
+.git
+.venv
+.env
