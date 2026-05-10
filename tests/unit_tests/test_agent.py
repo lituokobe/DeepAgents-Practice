@@ -1,8 +1,9 @@
 import asyncio
 from typing import AsyncIterator
 # from agent.my_agent1 import agent
-from agent.my_agent2 import agent
-
+# from agent.my_agent2 import agent
+# from agent.my_agent3 import agent
+from agent.my_agent4 import agent
 
 async def stream_agent_interaction_corrected(agent, thread_id: str) -> AsyncIterator[str]:
     """
@@ -69,7 +70,7 @@ async def stream_agent_interaction_corrected(agent, thread_id: str) -> AsyncIter
 
 async def main_test():
     # 测试运行Agent，并且进行交互
-    thread_id = "demo_thread_02"
+    thread_id = "demo_thread_01"
     async for response in stream_agent_interaction_corrected(agent, thread_id):
         print(response, end="", flush=True)
 
