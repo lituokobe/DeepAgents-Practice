@@ -1,3 +1,4 @@
+# DeepAgents
 ## 1. Preface
 In the class, the tutor makes `./3月28日直播代码/src` the source root of the project in PyCharm. This is a convenient IDE-specific setting.
 As I usually develop/deploy project s across multiple machines/platforms, I will ignore this setup.
@@ -9,6 +10,10 @@ langgraph dev
 Your agent in the configuration file will be built and run on a webpage with clear illustrations of the structure.
 
 ## 2. Intro to DeepAgents
+In the production environment, to handle complicated tasks, agents must have the capability to operate files (add, delete, edit, search, etc.)  
+For example, 
+- temp data will be created during tasks and it could stuff the context. Agents needs to save the temp data to a file and it needs the capability to operate files.
+- some code needs to be executed during the task, it needs the capability to save the code to a file.
 To build agents with complicated workflows, user LangGraph. To build agents with for complicated tasks, use DeepAgents.
 
 `create_deep_agent` in DeepAgents is a more advanced version of `create_agent` in LangChain that integrates more feature.
@@ -39,7 +44,7 @@ It is a key of DeepAgents' `create_deep_agent`.
 ### 3.1 StateBackend
 The default backend for DeepAgents. It stores the file data to LangChain/LangGraph's state. 
 The data will be persisted and called during a thread (conversation), but will disappear when the thread ends.  
-`checkpointer` must be provided, unless using LangSmith (`langgraph dev`) to deploy.  
+**`checkpointer` MUST be provided** (unless using LangSmith (`langgraph dev`) to deploy).  
 Best for drafting of Agents or storing middel result.
 
 ### 3.2 FilesystemBackend
@@ -58,7 +63,8 @@ Please visit `./agent/my_agent3.py` for reference.
 
 ### 3.4 StoreBackend (The backend storage from LangGraph)
 Use LangGraph's `BaseStore` abstract to save files and to persist data across threads.  
-Need to pass an argument `store = InMemoryStore()/RedisStore()` to `create_deep_agent`.
+This is for the long-term memory of the agent.  
+**MUST pass an argument `store = InMemoryStore()/RedisStore()/PostgreStore()` to `create_deep_agent`.**
 
 ### 3.5 CompositeBackend
 The router at backend. Direct the operation to different backends based on the file appendix.  
@@ -100,3 +106,22 @@ before the session closes. This is sometimes called memory distillation.
 | Short-term           | Redis                  | Live checkpoint, session state             |
 | Long-term structured | PostgreSQL             | Distilled facts, user profile, preferences |
 | Long-term semantic   | Milvus (optional)      | Fuzzy recall, RAG, large episodic memory   |
+
+## 5. Harness Engineering
+$$Agent = Model + Harness$$
+Harness Engineering in DeepAgents:
+1. Planning
+    - Critical difference from traditional agents: plan first, then delegate subagents/call tools. Traditional agents call tools directly one by one.
+    - Provide a tool of `write_todos` and let the agents to maintain structured task list.
+    - Realized with the middleware `TodoListMiddleware`.
+    - Let the agent track multiple tasks and their status, suitable for complicated multip-step tasks.
+2. File System
+    - `ls_info` and `read`/`write`/`edit` for file system as mentioned above.
+3. Task Delegation/Subagents
+    - Primary agents use tool of `task` and middleware `SubAgentMiddleware` to delegate specialized task to subagents.
+    - Developers can predefine different system prompts and child agents for task specialization.
+    - Advantages: context isolation, concurrency, and efficient token usage.
+4. Context Management
+5. Code Execution and Sandbox
+6. Human-in-the-loop
+7. Skills
