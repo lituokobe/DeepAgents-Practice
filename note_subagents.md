@@ -55,7 +55,9 @@ The `task()` tool is the core tool for subagents to decide delegate tasks.
         subagents=[custom_subagent]
     )
     ```
-3. df
-
-
-
+3. This design of subagents is more modularized compared to LangGraph's traditional child agent. The subagent will have isolated:
+   - system prompt
+   - tools
+   - context (state) - traditional child agent's context is shared across primary agent and all child agents  
+By default, child agents will inherit the primary agent's config (e.g. `user_id`), but isolated config is also supported.
+4. The description of subagents is important as it is the key for the primary agent to decide which subagent to delegate.

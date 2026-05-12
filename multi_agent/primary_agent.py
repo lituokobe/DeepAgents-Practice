@@ -30,6 +30,7 @@ async def load_subagents(config_path:str):
         }
         if "model" in spec:
             subagent["model"] = spec["model"]
+
         if "tools" in spec:
             tools = [available_tools[t] for t in spec["tools"]]
             print(tools)
