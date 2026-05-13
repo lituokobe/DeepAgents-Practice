@@ -31,7 +31,9 @@ DeepAgents by default provides a set of tools for file manipulation (`ls`, `writ
 ## 3. Backend
 > Backend is the underlying system or service that actually powers the agent’s intelligence, storage, tools, or execution.
 
-It is a key of DeepAgents' `create_deep_agent`.
+![Backends](../images/backends.png)
+
+Backends are configured via a key in DeepAgents' `create_deep_agent`.
 
 | Concept           | Backend                      | Tool                                          |
 | ----------------- | ---------------------------- |-----------------------------------------------|

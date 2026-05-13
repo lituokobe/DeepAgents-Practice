@@ -1,5 +1,5 @@
 # Subagents
-![Subagents Architecture](./images/subagents.png)
+![Subagents Architecture](../images/subagents.png)
 
 ## 1. Defining Subagents
 Subagents are created and called by the primary agent. They have independent system prompt, tool set and **context**.
