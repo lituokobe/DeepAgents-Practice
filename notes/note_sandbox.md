@@ -74,3 +74,17 @@ OpenSandbox is an open-source, general-purpose sandbox platform designed to prov
 
 ### Deployment
 Visit the project of sandbox for the local deployment of OpenSandbox.
+Docker deployment:
+```
+docker pull sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2
+
+docker run -d \
+--name opensandbox \
+-p 8080:8080 \
+sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2 \
+jupyter lab \
+--ip=0.0.0.0 \
+--port=8080 \
+--allow-root \
+--no-browser
+```
