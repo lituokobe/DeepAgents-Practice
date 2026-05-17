@@ -28,11 +28,11 @@ provide a tool of `execute` to the agents to perform Shell commands in the isola
     - Cannot read host environment variables
     - Cannot interfere with host processes
 
-## Sandbox Service Providers
+### Sandbox Service Providers
 - Daytona is a sandbox service provider. Visit `sandbox-daytona.py` to understand how to use it.
 - OpenSandBox is the open source sandbox service by Alibaba.
 
-## OpenSandBox
+## 3. OpenSandBox
 
 ### 🎯 Overview
 OpenSandbox is an open-source, general-purpose sandbox platform designed to provide secure, isolated execution environments for AI agents, code interpreters, and autonomous systems. Officially released in March 2026 under the Apache 2.0 license.
@@ -74,8 +74,13 @@ OpenSandbox is an open-source, general-purpose sandbox platform designed to prov
 
 ### Deployment
 Visit the project of sandbox for the local deployment of OpenSandbox.
-Docker deployment:
+Start an API server that dynamically creates/manages sandbox containers.
+```shell
+opensandbox-server
 ```
+
+OR, use Docker deployment to manually start one notebook container.:
+```shell
 docker pull sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2
 
 docker run -d \
@@ -87,4 +92,68 @@ jupyter lab \
 --port=8080 \
 --allow-root \
 --no-browser
+```
+### In our project
+We customized a OpenSandbox backend based on the class of `BaseSandbox` from the source code. Please find the class of `OpenSandboxBackend` from `OpenSandboxBackend_by_Tuo.py`.
+In this class, the most important function is `execute`, it will execute all the commands in the sandbox.
+There are two fundamentally different ways to access files inside a sandbox. Understanding when to use each approach is very important.
+
+#### 1. Agent Filesystem Tools
+
+Examples:
+
+- `read_file`
+- `write_file`
+- `edit_file`
+- `ls`
+- `glob`
+- `grep`
+- `execute`
+
+These are tools directly invoked by the LLM during task execution.
+
+They operate through the sandbox’s internal `execute()` environment, allowing the agent to so the basic file manipulation.
+
+---
+
+#### 2. File Transfer APIs
+
+Examples:
+
+- `uploadFiles()`
+- `downloadFiles()`
+
+These are APIs explicitly called by your application code. They provide local file transfer capabilities (rather than shell commands) for moving files between:
+- The host environment
+- The sandbox environment
+
+**Typical use cases for these APIs include:**
+
+- **Initializing the sandbox**  
+  Upload source code, configuration files, or datasets into the sandbox before the agent starts running.
+- **Retrieving generated artifacts**  
+  Download generated code, build outputs, reports, or other artifacts after the agent completes its work.
+- **Preloading dependencies and resources**  
+  Prepare dependency files or resource assets required during the agent’s execution.
+
+---
+
+#### 3. Usage
+
+**Uploading Files**
+
+Use `upload_files()` to write files into the sandbox before the agent starts running. Requirements:
+- File paths must be absolute paths
+- File contents must be provided as byte streams (`bytes`)
+
+**Downloading Files**
+
+Use `download_files()` after the agent completes execution to:
+- Read files from the sandbox
+- Or download them to another location
+
+## 4. Take a try
+Make sure in `langgraph.json`, the agent is set as follow: `"agent": "./sandbox/sandbox_agent.py:agent"`, then
+```shell
+langgraph dev
 ```

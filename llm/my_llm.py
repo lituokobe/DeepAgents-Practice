@@ -10,7 +10,7 @@ from agent.env_utils import ALIBABA_API_KEY, ALIBABA_BASE_URL
 # )
 
 qwen_llm = ChatOpenAI(
-    model="qwen3.6-plus",
+    model="qwen3.6-plus-2026-04-02",
     temperature=1.0,
     openai_api_key=ALIBABA_API_KEY,
     openai_api_base=ALIBABA_BASE_URL,

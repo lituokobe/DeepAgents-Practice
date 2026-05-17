@@ -1,7 +1,7 @@
 from deepagents import create_deep_agent
 from langgraph.checkpoint.memory import InMemorySaver
 
-from agent.my_llm import qwen_llm
+from llm.my_llm import qwen_llm
 from agent.my_tools import web_search
 
 checkpointer = InMemorySaver()

@@ -3,7 +3,7 @@ import asyncio
 import yaml
 from deepagents import create_deep_agent
 from deepagents.backends import FilesystemBackend
-from agent.my_llm import qwen_llm
+from llm.my_llm import qwen_llm
 from agent.my_tools import web_search
 from multi_agent.mcp_tool_config.mcp_tool_config import mcp_client
 

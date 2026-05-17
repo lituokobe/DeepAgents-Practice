@@ -4,7 +4,7 @@ from daytona import Daytona
 from deepagents import create_deep_agent
 from dotenv import load_dotenv
 
-from agent.my_llm import qwen_llm
+from llm.my_llm import qwen_llm
 
 load_dotenv()
 DAYTONA_API_KEY = os.getenv("DAYTONA_API_KEY")

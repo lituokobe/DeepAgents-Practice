@@ -61,3 +61,9 @@ The `task()` tool is the core tool for subagents to decide delegate tasks.
    - context (state) - traditional child agent's context is shared across primary agent and all child agents  
 By default, child agents will inherit the primary agent's config (e.g. `user_id`), but isolated config is also supported.
 4. The description of subagents is important as it is the key for the primary agent to decide which subagent to delegate.
+
+## 5. Take a try
+Make sure in `langgraph.json`, the agent is set as follow: `"agent": "./multi_agent/primary_agent.py:agent"`, then
+```shell
+langgraph dev
+```

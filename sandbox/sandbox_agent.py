@@ -1,8 +1,10 @@
 import asyncio
 import yaml
 from deepagents import create_deep_agent
-from deepagents.backends import FilesystemBackend
-from agent.my_llm import qwen_llm
+from deepagents.middleware import SummarizationToolMiddleware
+from langchain.agents.middleware import SummarizationMiddleware
+
+from llm.my_llm import qwen_llm
 from agent.my_tools import web_search
 from multi_agent.mcp_tool_config.mcp_tool_config import mcp_client
 from sandbox.OpenSandboxBackend_by_Tuo import OpenSandboxBackend
@@ -64,8 +66,7 @@ async def create():
         model=qwen_llm,
         skills=[sandbox_skills_path],
         tools=[web_search],
-        # checkpointer=checkpointer,
-        memory=["/Users/lituokobe/Desktop/Mashibing_LLM_course/37_DeepAgents_practice/multi_agent/AGENTS.md"], # load with MemoryMiddleware, the system prompt for this one
+        memory=["/AGENTS.md"], # load with MemoryMiddleware, the system prompt for this one
         backend=backend,
         subagents=subagents
     )

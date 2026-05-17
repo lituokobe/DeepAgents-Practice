@@ -2,11 +2,10 @@ import os
 import sys
 
 from deepagents import create_deep_agent
-from deepagents.backends import LocalShellBackend
 from langgraph.checkpoint.memory import InMemorySaver
 
 from agent.my_backend import DictBackend
-from agent.my_llm import qwen_llm
+from llm.my_llm import qwen_llm
 from agent.my_tools import web_search
 
 checkpointer = InMemorySaver()

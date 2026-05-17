@@ -1,11 +1,17 @@
 import os
 from datetime import timedelta
-
 import httpx
 from opensandbox import SandboxSync
 from opensandbox.config import ConnectionConfigSync
 from opensandbox.models import NetworkPolicy, NetworkRule
 
+# 配置连接
+config = ConnectionConfigSync(
+    domain="http://localhost:8080",
+    use_server_proxy=True,
+    request_timeout=timedelta(seconds=60),
+    transport=httpx.HTTPTransport(limits=httpx.Limits(max_connections=20)),
+)
 
 def get_or_create_sandbox(config, sandbox_id=None, image=None):
     """
@@ -244,10 +250,38 @@ def sync_skills_to_sandbox(backend, local_skills_path, sandbox_skills_path):
     return uploaded_count
 
 
-# 配置连接
-config = ConnectionConfigSync(
-    domain="http://localhost:8080",
-    use_server_proxy=True,
-    request_timeout=timedelta(seconds=60),
-    transport=httpx.HTTPTransport(limits=httpx.Limits(max_connections=20)),
-)
+if __name__ == "__main__":
+
+    print("\n===== OpenSandbox Test Start =====\n")
+
+    # Create sandbox
+    sandbox = get_or_create_sandbox(config)
+
+    print("\n===== Sandbox Created =====")
+    print(f"Sandbox ID: {sandbox.id}")
+
+    # Run a simple command
+    print("\n===== Running Command =====")
+
+    result = sandbox.commands.run("python3 --version")
+
+    print("\n===== Result =====")
+    print(result)
+
+    # Test filesystem
+    print("\n===== Creating File =====")
+
+    sandbox.commands.run("echo 'hello opensandbox' > hello.txt")
+
+    result2 = sandbox.commands.run("cat hello.txt")
+
+    print("\n===== File Content =====")
+    print(result2)
+
+    print("\n===== Listing Files =====")
+
+    result3 = sandbox.commands.run("ls -la")
+
+    print(result3)
+
+    print("\n===== Test Completed =====")
