@@ -93,7 +93,19 @@ Preparation:
 - Install JDK and IDEA.
 - Create a database named `motorparts_db` in mySQL.
 - Open the project with IDEA and configure the database in `./src/main/resources/application.yml` - `datasource`
-- Run `./src/main/java/com.motroparts/MotorpartsAplication.Java`
+- Run `./src/main/java/com.motroparts/MotorpartsAplication.Java` to start the service.
+  - Visit http://localhost:8080/swagger-ui/index.html for the internal ERP system.
+- Run `./src/main/java/com.motroparts/init/SparkPlugDataInitializer.Java` to initialize the database.
+- Launch the simulated external supplier web (static) with Nginx for crawling:
+  - copy the files to Homebrew Nginx web root: 
+  ```shell 
+  cp -R /Users/lituokobe/Desktop/Mashibing_LLM_course/38_Java_ERP/ecommerce-demo/* $(brew --prefix)/var/www/ 
+  ```
+  - port 8080 is taken by the Java ERP system, this Brew Nginx web server is running on port 8081. Run below:
+  ```shell 
+  brew services start nginx
+  ```
+  - Visit http://localhost:8081/index.html for the simulated external supplier web.
 
 
 
