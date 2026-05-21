@@ -88,6 +88,7 @@ Acquisition Assistant:
 - Generate full analysis report and acquisition proposal
 - Generate acquisition plan and list with human intervention, revise accordingly
 
+### Preparation
 The ERP system is running with JAVA, and the project folder is `./38_Jave_`, open it with IDEA.
 Preparation:
 - Install JDK and IDEA.
@@ -106,6 +107,64 @@ Preparation:
   brew services start nginx
   ```
   - Visit http://localhost:8081/index.html for the simulated external supplier web.
+
+### Multi-agent
+1. Primary agent is the coordinator that 
+  - understands the request
+  - delegates tasks to sub-agents
+  - manages memory
+  - manages / creates skills, allocates new skills to sub-agents
+  - NOT performs ERP system tasks
+2. Analysis assistant is a sub-agent that
+  - collects data
+  - analyzes data
+  - generates charts
+  - exports report
+3. Procurement assistant is a sub-agent that
+  - understands the order
+  - calls MCP tools
+  - validates result
+  - confirm the order
+
+### Example of dataflow
+```mark down
+1. User Input: "Help me conduct a supplier price comparison analysis for motorcycle spark plugs"
+
+2. ContextInjectionMiddleware
+   → Extract from runtime.context: user_id="lx", username="lx"
+   → Inject into SystemMessage: "Current user user_id: lx, preference file: /memories/lx/preferences.md"
+
+3. MemoryMiddleware
+   → Load global rules from sandbox /AGENTS.md → Inject into system prompt
+
+4. Agent Routing
+   → Read /memories/lx/preferences.md (StoreBackend)
+   → Determine: "price comparison analysis" → Route to procurement-analyst
+
+5. task(procurement-analyst) Delegation Format:
+   [Task Objective] [User Preferences] [Analysis Requirements] [Output Requirements]
+
+6. Sub-Agent (procurement-analyst) Execution:
+   a. ls /skills/procurement/ → Scan available skills
+   b. supplier_query("spark plugs") → MCP → Java backend → ERP data
+   c. part_by_supplier(supplier_id) → Query parts by supplier
+   d. Skill: Read supplier-price-urls/data/url_mapping.yaml
+      → Match URLs → web-content-fetcher → Crawl external quotes
+   e. Python analysis script → /data/analysis_result.json
+   f. generate_visualization("bar", chart_config={...}) → Chart URL
+   g. write_file("/analysis/report_20260509.md") → Final report
+
+7. Sub-Agent → compact_conversation → Return structured results to Agent
+```
+### Storage (CompositeBackend)
+| Path                 | Backend                      | Persistence                               | Content                                             |
+|----------------------|------------------------------|-------------------------------------------|-----------------------------------------------------|
+| /AGENTS.md           | OpenSandbox (default route)  | Sandbox lifecycle                         | Global behavior guidelines (Phase 1.4 upload)       |
+| /skills/             | OpenSandbox (default route)  | Sandbox lifecycle + StoreBackend recovery | Skill files (pre-configured + persistence hybrid)   |
+| /memories/{user_id}/ | StoreBackend → InMemoryStore | Cross-session                             | User preference files                               |
+| /persisted-skills/   | StoreBackend → InMemoryStore | Cross-session                             | Persisted skills                                    |
+| Other paths          | OpenSandbox (default route)  | Sandbox lifecycle                         | Temporary files, code execution, analysis artifacts |
+
 
 
 
