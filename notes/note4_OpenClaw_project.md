@@ -165,7 +165,20 @@ Preparation:
 | /persisted-skills/   | StoreBackend → InMemoryStore | Cross-session                             | Persisted skills                                    |
 | Other paths          | OpenSandbox (default route)  | Sandbox lifecycle                         | Temporary files, code execution, analysis artifacts |
 
+### Middlewares
+| Middleware                    | Function                                                 |
+|-------------------------------|----------------------------------------------------------|
+| `ContextInjectionMiddleware`  | Inject `user_id`/`username` into system prompt           |
+| `SkillsSyncMiddleware`        | Sync local `src/skills/` → sandbox                       |
+| `UserSkillsRestoreMiddleware` | Restore skills from StoreBackend persistence → sandbox   |
+| `SummarizationToolMiddleware` | Provide `compact_conversation` tool + auto-summarization |
+| `ModelCallLimitMiddleware`    | Max 50 model calls                                       |
+| `ToolCallLimitMiddleware`     | Max 200 tool calls                                       |
 
+### Port mapping
+- 8080: Java ERP system 
+- 8081: Nginx web server (external supplier web)
+- 112.124.10.172:8080: OpenSandbox (deployed on AliCloud ECS)
 
 
 

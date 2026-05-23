@@ -74,18 +74,25 @@ OpenSandbox is an open-source, general-purpose sandbox platform designed to prov
 
 ### Deployment
 Visit the project of sandbox for the local deployment of OpenSandbox.
-Start an API server that dynamically creates/manages sandbox containers.
+
+This project is deployed on Alibaba ECS cloud server, as Linux server is most suitable for this deployment.
+[Installation guide](https://open-sandbox.ai/zh/overview/home).
+
+Also need to install the below base image of OpenSandbox.
 ```shell
-opensandbox-server
+docker pull sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2
+```
+Start an API server that dynamically creates/manages sandbox containers.
+Edit the configuration file `.sandbox.toml` in user/username to set up the sandbox environment, including the port and the path to the sandbox configuration file.
+```shell
+uvs opensandbox-server
 ```
 
 OR, use Docker deployment to manually start one notebook container.:
 ```shell
-docker pull sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2
-
 docker run -d \
 --name opensandbox \
--p 8080:8080 \
+-p 8082:8080 \
 sandbox-registry.cn-zhangjiakou.cr.aliyuncs.com/opensandbox/code-interpreter:v1.0.2 \
 jupyter lab \
 --ip=0.0.0.0 \
