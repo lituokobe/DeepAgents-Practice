@@ -11,7 +11,7 @@ MCP 工具全量测试。
 
 import asyncio
 import random
-from datetime import datetime
+from datetime import date, datetime
 from decimal import Decimal
 
 from fastmcp import Client
@@ -401,11 +401,12 @@ async def run_all_agent_client_tests():
 
 
 if __name__ == "__main__":
+    import sys
 
     # if len(sys.argv) > 1:
     #     mode = sys.argv[1]
     # else:
-    mode = "mcp"
+    mode = "agent"
 
     if mode == "mcp":
         print("运行全部 mcp_client 测试（内存模式）...")

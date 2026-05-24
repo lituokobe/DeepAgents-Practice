@@ -1,11 +1,11 @@
 ---
 name: skill-management
-description: 用于管理技能的完整生命周期：从 URL 下载技能 ZIP 包并解压、根据需求创建新技能、沙箱内测试验证、持久化到 StoreBackend、分配给指定子 Agent。当用户要下载、创建、安装、分配技能时激活。
+description: 用于管理用户技能的完整生命周期：从 URL 下载技能 ZIP 包并解压、根据需求创建新技能、沙箱内测试验证、持久化到 StoreBackend、分配给指定子 Agent。当用户要下载、创建、安装、分配技能时激活。
 ---
 
 # 技能管理
 
-你负责管理技能的。所有操作在沙箱内执行（安全隔离），通过 StoreBackend 持久化（跨会话保留）。
+你负责管理用户技能的完整生命周期。所有操作在沙箱内执行（安全隔离），通过 StoreBackend 持久化（跨会话保留）。
 
 ## 技能架构
 
@@ -29,7 +29,7 @@ description: 用于管理技能的完整生命周期：从 URL 下载技能 ZIP 
 
 ### 阶段 1 — 下载并解压（沙箱内，`/skills/main/`）
 
-用户提供 ZIP 下载 URL（如 `https://xxx.convex.site/api/v1/download?slug=web-content-fetcher`）。
+用户提供 ZIP 下载 URL（如 `https://xxx.convex.site/api/v1/download?slug=web-scraper`）。
 
 一条命令完成下载 + 解压 + 结构校验：
 ```

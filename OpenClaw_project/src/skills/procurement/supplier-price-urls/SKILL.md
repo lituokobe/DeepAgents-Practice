@@ -35,7 +35,7 @@ mappings:
    - `part_name` 包含匹配（ERP 返回的零件名包含在映射的 part_name 中，或反之）
    - `supplier` 包含匹配（ERP 返回的供应商名包含在映射的 supplier 中，或反之）
    - 两个字段同时匹配才算命中
-4. 将找到的 URL 列表传给爬虫技能（如 `web-content-fetcher`）获取最新报价和产品详情
+4. 将找到的 URL 列表传给爬虫技能（如 `web-scraper`）获取最新报价和产品详情
 
 ## 示例
 
@@ -46,7 +46,7 @@ ERP 返回: part_name="火花塞", supplier="博世配件"
   → "【博世BOSCH原装】摩托车火花塞 FR7DC+ 铂金火花塞 高性能"
     supplier="博世配件旗舰店"
     url="http://192.168.23.3/spark-plug-bosch.html"
-→ 传给 web-content-fetcher 爬取该 URL → 获取价格+型号+品牌+材质+单位
+→ 传给 web-scraper 爬取该 URL → 获取价格+型号+品牌+材质+单位
 ```
 
 ## 注意事项

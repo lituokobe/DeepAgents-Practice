@@ -22,7 +22,7 @@ from OpenClaw_project.src.agent.schema import (
     ChatResponse,
     Message,
 )
-from api_view.agent_loader import agent_loader
+from OpenClaw_project.src.api_view.agent_loader import agent_loader
 
 
 # 创建路由
@@ -267,6 +267,13 @@ async def stream_chat_response(
     # 创建调试日志文件
     debug_log = get_debug_log_path(thread_id)
 
+    write_debug_log(debug_log, "STREAM_INIT", {
+        "thread_id": thread_id,
+        "message_preview": message[:200] if message else None,
+        "context": context,
+        "config_keys": list(config.keys()) if config else None,
+    })
+
     def _last_display_is_assistant():
         return (display_messages and
                 display_messages[-1]["role"] == "assistant")
@@ -289,6 +296,13 @@ async def stream_chat_response(
             version="v2",
         ):
             chunk_type = chunk.get("type")
+
+            write_debug_log(debug_log, "CHUNK_RECEIVED", {
+                "type": chunk_type,
+                "has_interrupts": bool(chunk.get("interrupts")),
+                "has_data": "data" in chunk,
+                "ns": list(chunk.get("ns", ()))[:3],  # First 3 namespace segments
+            })
 
             # ---- 值流（中断检测，必须在 messages 处理之前）----
             if chunk_type == "values" and chunk.get("interrupts"):
@@ -560,9 +574,28 @@ async def stream_chat_response(
 
     except Exception as e:
         write_debug_log(debug_log, "STREAM_ERROR", {"error": str(e)})
+
+        import traceback
+        full_trace = traceback.format_exc()
+
+        write_debug_log(debug_log, "STREAM_ERROR", {
+            "error_type": type(e).__name__,
+            "error_message": str(e),
+            "traceback_preview": full_trace[:2000],  # First 2000 chars
+        })
+
+        # yield create_sse_message({
+        #     "type": "error",
+        #     "message": str(e)
+        # })
+
+        print(f"❌ STREAM ERROR in thread {thread_id}: {e}")
+        print(f"🔍 Traceback:\n{full_trace}")
+
         yield create_sse_message({
             "type": "error",
-            "message": str(e)
+            "message": f"{type(e).__name__}: {str(e)}",  # Include error type
+            "debug_hint": "Check backend logs for full traceback"  # Hint for frontend
         })
 
 

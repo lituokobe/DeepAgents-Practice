@@ -19,7 +19,7 @@ sys.path.insert(0, str(PROJECT_DIR))
 from pymongo import MongoClient
 
 # 导入配置
-from api_view.web_config import (
+from OpenClaw_project.src.api_view.web_config import (
     MONGODB_URI,
     MONGODB_DB_NAME,
     MONGODB_CHECKPOINT_COLLECTION,
@@ -70,7 +70,7 @@ class AgentLoader:
             self._mongodb_client = MongoClient(MONGODB_URI)
 
             # 通过 main_agent 的懒加载方法获取 Agent（内部已集成 MongoDBSaver checkpointer）
-            from agent.main_agent import get_agent_async
+            from OpenClaw_project.src.agent.main_agent import get_agent_async
             self._agent = await get_agent_async()
 
             self._initialized = True

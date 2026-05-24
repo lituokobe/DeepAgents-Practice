@@ -129,6 +129,8 @@ async def create_main_agent(
     # /persisted-skills/  → StoreBackend（按 Agent scope 组织技能）
     # 其余路径（临时文件、代码执行）保留在沙箱。
     logger.info("Phase 1.5/10: 配置 CompositeBackend (memories + persisted-skills → Store)...")
+    logger.info(f"🔍 DEBUG: STORE type={type(STORE)}, sandbox_id={sandbox_id}")
+
     backend = lambda rt: CompositeBackend(
         default=sandbox_backend,
         routes={
@@ -142,6 +144,16 @@ async def create_main_agent(
             ),
         },
     )
+
+    # 🔍 TEMP: Test the backend creation immediately
+    try:
+        test_rt = type('MockRuntime', (),
+                       {'runtime': type('MockCtx', (), {'context': type('MockUser', (), {'user_id': 'test'})()})()})()
+        test_backend = backend(test_rt)
+        logger.info(f"✅ CompositeBackend created successfully: {test_backend}")
+    except Exception as e:
+        logger.error(f"❌ CompositeBackend creation failed: {e}", exc_info=True)
+        raise
 
     # ---- Phase 2: MCP 工具加载 ----
     logger.info("Phase 2/10: 加载 MCP 工具...")

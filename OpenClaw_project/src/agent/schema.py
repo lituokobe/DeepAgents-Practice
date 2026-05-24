@@ -15,6 +15,8 @@ class ProcurementContext:
     """
     运行时上下文，由调用方在 invoke 时传入。
     用于传递当前用户身份等基础信息。
+    Passed from FastAPI or frontend.
+    In this project, under api_view/agent_loader.py/create_config() and api_view/api/chat.py/stream_chat_response()
     """
     user_id: str                # 必填，用户唯一标识
     username: str               # 必填，用户姓名/登录名

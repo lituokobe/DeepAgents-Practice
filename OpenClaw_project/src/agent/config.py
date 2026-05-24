@@ -18,10 +18,10 @@ from agent.env_utils import (
 # ---------- 模型配置 ----------
 # 主 Agent 模型
 MAIN_MODEL = ChatOpenAI(
-    model="gpt5.1", #"deepseek-v4-pro",
+    model="deepseek-v4-pro",
     temperature=1.1,
-    openai_api_key=OPENAI_API_KEY,
-    openai_api_base=OPENAI_BASE_URL,
+    openai_api_key=DEEPSEEK_API_KEY,
+    openai_api_base=DEEPSEEK_BASE_URL,
     max_tokens=2560000,
     model_kwargs={
         "extra_body": {
@@ -31,10 +31,10 @@ MAIN_MODEL = ChatOpenAI(
 )
 # 摘要专用模型（摘要需要稳定输出，temperature 设为较低值）
 SUMMARY_MODEL = ChatOpenAI(
-    model="gpt4",#"deepseek-v4-flash",
+    model="deepseek-v4-flash",
     temperature=0.3,
-    openai_api_key=OPENAI_API_KEY,
-    openai_api_base=OPENAI_BASE_URL,
+    openai_api_key=DEEPSEEK_API_KEY,
+    openai_api_base=DEEPSEEK_BASE_URL,
     max_tokens=2560000,
     model_kwargs={
         "extra_body": {
@@ -61,7 +61,7 @@ FALLBACK_MODEL = init_chat_model(
 # ---------- 沙箱配置 ----------
 # OpenSandbox 沙箱配置连接
 SANDBOX_CONFIG = ConnectionConfigSync(
-    domain="http://112.124.10.172:8080",#"http://39.100.100.28:8080",
+    domain="http://120.26.244.27:8080",#"http://39.100.100.28:8080",
     use_server_proxy=True,
     request_timeout=timedelta(seconds=60),
     transport=httpx.HTTPTransport(limits=httpx.Limits(max_connections=20)),

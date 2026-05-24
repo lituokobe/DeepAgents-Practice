@@ -49,9 +49,6 @@ def run_backend():
 
     return backend_proc
 
-
-
-
 def check_backend_ready(max_wait=180):
     """检查后端是否就绪"""
     print("[System] Waiting for backend to be ready...")

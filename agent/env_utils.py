@@ -1,5 +1,6 @@
 import os
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 
 load_dotenv(override=True)
 
@@ -23,5 +24,30 @@ DAYTONA_BASE_URL = os.getenv('DAYTONA_BASE_URL')
 
 if __name__ == '__main__':
     print(ALIBABA_BASE_URL)
-    print(ALIBABA_API_KEY)
-    print(ZHIPU_API_KEY)
+    print(ALIBABA_API_KEY[:20]+".....")
+    print(ZHIPU_API_KEY[:20]+".....")
+    print(ZHIPU_BASE_URL)
+
+    # llm  = ChatOpenAI(
+    #     model="glm-5.1",
+    #     temperature=0.3,
+    #     openai_api_key=ZHIPU_API_KEY,
+    #     openai_api_base=ZHIPU_BASE_URL,
+    #     max_tokens=2560000,
+    # )
+    llm = ChatOpenAI(
+        model="deepseek-v4-pro",
+        temperature=1.1,
+        openai_api_key=DEEPSEEK_API_KEY,
+        openai_api_base=DEEPSEEK_BASE_URL,
+        max_tokens=2560000,
+        model_kwargs={
+            "extra_body": {
+                "thinking": {"type": "disabled"}
+            }
+        }
+    )
+
+    response = llm.invoke("Hello, how are you?")
+
+    print(response)

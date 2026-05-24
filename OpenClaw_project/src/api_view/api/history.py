@@ -11,14 +11,14 @@ from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Query
 
-from agent.schema import (
+from OpenClaw_project.src.agent.schema import (
     Session,
     SessionListResponse,
     SessionMessagesResponse,
     DeleteSessionResponse,
     Message,
 )
-from api_view.agent_loader import agent_loader
+from OpenClaw_project.src.api_view.agent_loader import agent_loader
 
 
 # 创建路由

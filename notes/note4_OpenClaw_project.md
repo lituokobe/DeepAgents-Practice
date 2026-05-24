@@ -175,12 +175,35 @@ Preparation:
 | `ModelCallLimitMiddleware`    | Max 50 model calls                                       |
 | `ToolCallLimitMiddleware`     | Max 200 tool calls                                       |
 
+
+Custom Middleware in the Project
+
+1.  **Read/Write Separation:** ContextInjection (Reading Memory) ↔ MemoryUpdate (Writing Memory). When injecting, explicitly inform the Agent: "System auto-maintains, no manual update required."
+2.  **Three-Layer Skills Synchronization:** SkillsSync (Local → Sandbox) + UserSkillsRestore (Store → Sandbox) + SkillsMiddleware (Sandbox → Agent Discovery). Each handles a specific segment.
+3.  **Differentiated Management for Main/Sub-Agents:** The Main Agent has panoramic middleware, the Analyst retains summaries, and the Order agent only requires restrictions—reduce configuration as needed.
+4.  **Silent Failure > Crash:** ContextInjection two-level degradation, SkillsSync exception capture, MemoryUpdate full try/except, no middleware failure should drag down the Agent.
+LLM can take the errors from tools, but cannot take the errors from the middleware. Tools are under the LLM. But middleware is part of the system design.
+
 ### Port mapping
-- 8080: Java ERP system 
+- 8080: Java ERP system ()
 - 8081: Nginx web server (external supplier web)
-- 112.124.10.172:8080: OpenSandbox (deployed on AliCloud ECS)
+- alicloud_host:8080: OpenSandbox (deployed on AliCloud ECS)
+
+### Start the project
+Run `./OpenClaw_project/src/mcp_server/server_main.py` to start the MCP server.  
+Run `./OpenClaw_project/start_web.py` to start the service including frontend and backend.
 
 
 
 
 
+
+
+
+## 3. Special Features
+
+### 3.1 Privately deployed sandbox
+### 3.3 Customized Progressively Disclosed Tool Description
+In the MCP of data visualization, there are 27 tools.  
+To make good use of context, I created another tool `generate_visualization()` to assemble their top level description first, after LLM decides which tool to use, load the detailed descriptions of parameter definition.  
+In practice, expose this one tool instead of 27 tools.

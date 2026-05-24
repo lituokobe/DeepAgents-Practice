@@ -6,7 +6,7 @@
 用法:
     python download_skill.py <URL>
 
-    URL 示例: https://wry-manatee-359.convex.site/api/v1/download?slug=web-content-fetcher
+    URL 示例: https://wry-manatee-359.convex.site/api/v1/download?slug=web-scraper
 
 输出:
     JSON 到 stdout，包含 success / skill_name / path / files / errors 字段。
