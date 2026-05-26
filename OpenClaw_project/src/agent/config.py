@@ -61,7 +61,7 @@ FALLBACK_MODEL = init_chat_model(
 # ---------- 沙箱配置 ----------
 # OpenSandbox 沙箱配置连接
 SANDBOX_CONFIG = ConnectionConfigSync(
-    domain="http://120.26.244.27:8080",#"http://39.100.100.28:8080",
+    domain="http://47.99.102.45:8080",#"http://39.100.100.28:8080",
     use_server_proxy=True,
     request_timeout=timedelta(seconds=60),
     transport=httpx.HTTPTransport(limits=httpx.Limits(max_connections=20)),

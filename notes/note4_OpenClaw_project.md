@@ -201,9 +201,47 @@ Run `./OpenClaw_project/start_web.py` to start the service including frontend an
 
 
 ## 3. Special Features
+OpenSandbox is a private sandbox deployed with Docker. One user user should have one dedicated sandbox, with all the isolated resources.
 
 ### 3.1 Privately deployed sandbox
 ### 3.3 Customized Progressively Disclosed Tool Description
 In the MCP of data visualization, there are 27 tools.  
 To make good use of context, I created another tool `generate_visualization()` to assemble their top level description first, after LLM decides which tool to use, load the detailed descriptions of parameter definition.  
 In practice, expose this one tool instead of 27 tools.
+### 3.3 Complete Frontend and Backend Based on SSE Event Streams
+
+Architecture Overview: Division of Labor Among Three Files
+
+```text
+1 api_view/api/
+2 ├── chat.py          ★ Core: SSE Streaming Chat + Interrupt Detection + Interrupt Recovery + Display Message Persistence
+3 ├── history.py       ◂ History Session List / Message Viewing / Session Deletion
+4 └── agent_loader.py  (Upper Layer) ◃ Agent Singleton / MongoDB Connection / Display Message Storage and Retrieval
+```
+
+# Code Block
+
+| Frontend (Browser)              | Backend (FastAPI)                                   | LangGraph Agent |
+|:--------------------------------|:----------------------------------------------------|:----------------|
+| **POST** `/api/chat/stream`     |                                                     |                 |
+| `{message, thread_id, user_id}` |                                                     |                 |
+| ----------------------->        | `⊕ stream_chat_response()`                          |                 |
+|                                 | `├─ agent_loader.get_agent_for_user(user_id)`       |                 |
+|                                 | `├─ agent_loader.create_config(thread_id, user_id)` |                 |
+|                                 | `├─ Construct input:`                               |                 |
+|                                 | `│  Initial: {"messages": [{"role":"user",...}]}`   |                 |
+|                                 | `│  Resume: Command(resume=resume_data)`            |                 |
+|                                 | `│`                                                 |                 |
+|                                 | `⊕ agent_graph.astream(`                            |                 |
+|                                 | `   input, config,`                                 |                 |
+|                                 | `   stream_mode=["messages","values"],`             |                 |
+|                                 | `   subgraphs=True, version="v2"`                   |                 |
+|                                 | `)`                                                 |                 |
+|                                 | `↓↓↓ Start Streaming Push ↓↓↓`                      |                 |
+| `← SSE: token`                  | `⊕ messages stream: (token, metadata)`              |                 |
+| `← SSE: tool_start`             | `← token has tool_call_chunks → Tool Start`         |                 |
+| `← SSE: tool_args`              | `← Tool argument delta`                             |                 |
+| `← SSE: tool_result`            | `← type=="tool" → Tool Result`                      |                 |
+| `← SSE: tool_end`               | `← Tool call ended`                                 |                 |
+| `← SSE: interrupt`              | `⊕ values stream: chunk["interrupts"]`              |                 |
+| `← SSE: done`                   | `⊕ Stream ended normally`                           |                 |
