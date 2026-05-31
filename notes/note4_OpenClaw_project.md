@@ -89,7 +89,7 @@ Acquisition Assistant:
 - Generate acquisition plan and list with human intervention, revise accordingly
 
 ### Preparation
-The ERP system is running with JAVA, and the project folder is `./38_Jave_`, open it with IDEA.
+The ERP system is running with JAVA, and the project folder is `./38_Java_ERP`, open it with IDEA.
 Preparation:
 - Install JDK and IDEA.
 - Create a database named `motorparts_db` in mySQL.
@@ -218,8 +218,6 @@ Architecture Overview: Division of Labor Among Three Files
 3 ├── history.py       ◂ History Session List / Message Viewing / Session Deletion
 4 └── agent_loader.py  (Upper Layer) ◃ Agent Singleton / MongoDB Connection / Display Message Storage and Retrieval
 ```
-
-# Code Block
 
 | Frontend (Browser)              | Backend (FastAPI)                                   | LangGraph Agent |
 |:--------------------------------|:----------------------------------------------------|:----------------|

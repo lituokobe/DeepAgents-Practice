@@ -10,7 +10,6 @@ import os
 import time
 import threading
 import signal
-import asyncio
 
 def run_backend():
     """启动后端服务"""
@@ -20,7 +19,10 @@ def run_backend():
     project_root = os.path.dirname(os.path.abspath(__file__))
     src_dir = os.path.join(project_root, "src")
     env = os.environ.copy()
+    print(f"222222env['PYTHONPATH']:{env['PYTHONPATH']}")
     env["PYTHONPATH"] = src_dir + os.pathsep + env.get("PYTHONPATH", "")
+    print(f"111111env:{env}")
+    print(f"222222env['PYTHONPATH']:{env['PYTHONPATH']}")
 
     backend_proc = subprocess.Popen(
         [sys.executable, "-m", "uvicorn", "api_view.web_main:app",
@@ -31,6 +33,15 @@ def run_backend():
         stderr=subprocess.STDOUT,
         bufsize=1
     )
+    """
+    subprocess is a Python standard library module that allows you to spawn new processes, 
+    connect to their input/output/error pipes, and obtain their return codes. 
+    It's the modern way to run external commands and programs from within Python.
+💡  It's like a Python's way to "open a terminal and run a command" programmatically.
+
+    This is equivalent to running in terminal:
+    /path/to/python -m uvicorn api_view.web_main:app --reload --host 0.0.0.0 --port 8090
+    """
 
     # 实时输出后端日志
     def output_backend():

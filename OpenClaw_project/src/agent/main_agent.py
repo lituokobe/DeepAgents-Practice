@@ -146,9 +146,26 @@ async def create_main_agent(
     )
 
     # 🔍 TEMP: Test the backend creation immediately
+    """
+    type() is to class what lambda is to def
+    Both are the low-level, dynamic, programmatic ways to create Python objects — while class/def are the high-level, readable, declarative syntax sugar.
+    """
     try:
-        test_rt = type('MockRuntime', (),
-                       {'runtime': type('MockCtx', (), {'context': type('MockUser', (), {'user_id': 'test'})()})()})()
+        test_rt = type(
+            'MockRuntime',
+            (),
+            {
+                'runtime': type(
+                    'MockCtx',
+                    (),
+                    {'context': type(
+                        'MockUser',
+                        (),
+                        {'user_id': 'test'}
+                    )()
+                     })()
+            }
+        )()
         test_backend = backend(test_rt)
         logger.info(f"✅ CompositeBackend created successfully: {test_backend}")
     except Exception as e:
